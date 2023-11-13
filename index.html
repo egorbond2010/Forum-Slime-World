@@ -3,15 +3,133 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Guess the Number</title>
+    <title>Игра-кликер</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(45deg, blue, yellow);
+            background-size: 200% 200%;
+            animation: gradientAnimation 5s infinite;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        @keyframes gradientAnimation {
+            0% {
+                background-position: 0% 50%;
+            }
+            100% {
+                background-position: 100% 50%;
+            }
+        }
+        .container {
+            text-align: center;
+            margin: 20px;
+            flex: 1;
+        }
+        h1 {
+            color: white;
+        }
+        #clickCount {
+            font-size: 36px;
+            color: white;
+        }
+        #clickButton {
+            font-size: 24px;
+            padding: 10px 20px;
+            background-color: #0074D9;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        #store {
+            margin-top: 20px;
+        }
+        .store-item {
+            display: inline-block;
+            margin: 10px;
+            padding: 10px;
+            background-color: #333;
+            color: white;
+            cursor: pointer;
+        }
+        #godMode {
+            background-color: #333;
+            color: white;
+            padding: 10px;
+            cursor: pointer;
+            flex: 0.2; /* Adjust the width of the God Mode tab */
+        }
+    </style>
 </head>
 <body>
+    <div class="container">
+        <h1>Игра-кликер</h1>
+        <p id="clickCount">Кликов: 0</p>
+        <button id="clickButton">Нажмите на меня!</button>
+        <div id="store">
+            <div class="store-item" id="autoClicker">Купить автоматический кликер (стоимость: 300 кликов)</div>
+            <div class="store-item" id="superClicker">Купить супер-кликер (стоимость: 100,000 кликов)</div>
+        </div>
+    </div>
+    
+    <div id="godMode" onclick="toggleGodMode()">Режим Бога</div>
 
-    <h1>Guess the Number</h1>
-    <p id="message">Try to guess the number between 1 and 100.</p>
-    <input type="number" id="guess" placeholder="Enter your guess">
-    <button onclick="checkGuess()">Submit Guess</button>
+    <script>
+        let clicks = 0;
+        let autoClickers = 0;
+        let superClickers = 0;
+        let godModeActive = false;
 
-    <script src="script.js"></script>
+        const clickCount = document.getElementById('clickCount');
+        const clickButton = document.getElementById('clickButton');
+        const autoClickerButton = document.getElementById('autoClicker');
+        const superClickerButton = document.getElementById('superClicker');
+
+        clickButton.addEventListener('click', () => {
+            clicks++;
+            if (godModeActive) {
+                clicks += 1000000000; // 1 billion clicks in God Mode
+            } else {
+                clicks += autoClickers + superClickers * 100;
+            }
+            updateClickCount();
+        });
+
+        autoClickerButton.addEventListener('click', () => {
+            if (clicks >= 300) {
+                clicks -= 300;
+                autoClickers++;
+                autoClickerButton.textContent = `Купить автоматический кликер (стоимость: 300 кликов) - Владелец: ${autoClickers}`;
+                updateClickCount();
+            }
+        });
+
+        superClickerButton.addEventListener('click', () => {
+            if (clicks >= 100000) {
+                clicks -= 100000;
+                superClickers++;
+                superClickerButton.textContent = `Купить супер-кликер (стоимость: 100,000 кликов) - Владелец: ${superClickers}`;
+                updateClickCount();
+            }
+        });
+
+        function updateClickCount() {
+            clickCount.textContent = `Клики: ${clicks}`;
+        }
+
+        function toggleGodMode() {
+            const password = prompt("Введите пароль для режима Бога:");
+            if (password === "01112012") {
+                godModeActive = !godModeActive;
+                alert(godModeActive ? "Режим Бога активирован!" : "Режим Бога выключен.");
+            } else {
+                alert("Неверный пароль. Режим Бога не активирован.");
+            }
+        }
+    </script>
 </body>
 </html>
